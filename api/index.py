@@ -1,6 +1,5 @@
 from flask import Flask, request
 import json
-from flask_uploads import UploadSet, configure_uploads, IMAGES
 import os
 from supabase import create_client, Client
 
@@ -12,9 +11,7 @@ url="https://frbmnrbtdefdfndosvjj.supabase.co"
 key='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZyYm1ucmJ0ZGVmZGZuZG9zdmpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDIzNzE1MTQsImV4cCI6MjAxNzk0NzUxNH0.RNy8yeRQmVLahLW2iO8HyA-fn9iQevTDBzSHIMgkhms'
 supabase: Client = create_client(url, key)
 # Configure the upload set and the upload folder
-photos = UploadSet("photos", IMAGES)
-app.config["UPLOADED_PHOTOS_DEST"] = "uploads"
-configure_uploads(app, photos)
+
 
 ####################################################User functions#########################################################
 #sign up 
@@ -35,13 +32,13 @@ def api_users_signup():
         if len(response.data)>0:    
             error='User already exists'
     if (not error):
-        photo_path = os.path.join(app.config["UPLOADED_PHOTOS_DEST"], photos.save(profile_pic))    
+        #photo_path = os.path.join(app.config["UPLOADED_PHOTOS_DEST"], photos.save(profile_pic))    
         response = supabase.table('USERS').insert(
             {"email": email, 
             "password": password,
             "fullname":fullname,
             "phonenum":phonenum,
-            "profile_pic": photo_path
+            #"profile_pic": photo_path
             }).execute()
         print(str(response.data))
         if len(response.data)==0:
@@ -122,7 +119,7 @@ def api_product_add():
     
     return json.dumps({'status':500,'message':error})
 #add product images 
-@app.route('/product.images', methods=['POST'])
+'''@app.route('/product.images', methods=['POST'])
 def api_product_add_images():
     post_id= request.form.get('post_id')
     image=request.files['image']
@@ -141,6 +138,7 @@ def api_product_add_images():
          error='Invalid info'        
     
     return json.dumps({'status':500,'message':error})
+'''
 #fetch categories 
 @app.route('/categories.all',methods=['GET'])
 def api_fetch_categories(): 
