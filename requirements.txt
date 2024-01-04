@@ -1,3 +1,2 @@
 Flask
 supabase
-Flask-Uploads
