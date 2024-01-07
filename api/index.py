@@ -80,7 +80,7 @@ def api_users_signup_auth():
 @app.route('/user.profile',methods=['GET','POST'])
 def api_user_profile(): 
     id_user= request.form.get('id_user')
-    response = supabase.table('USERS').select("*").eq('id',id_user).execute()  
+    response = supabase.table('USERS').select("*").eq('id',id_user).limit(1).execute()  
     return json.dumps({'status':200,'message':'profile data fetched ','data':response.data})
 
 #update profile 
