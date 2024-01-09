@@ -21,7 +21,7 @@ def api_users_signup():
     fullname= request.form.get('fullname')
     password= request.form.get('password')
     phonenum= request.form.get('phonenum')
-    profile_pic=request.form.get['profile_pic']
+    profile_pic=request.form.get('profile_pic')
     error =False
     if (not email) or (len(email)<5): #You can even check with regx
         error='Email needs to be valid'
