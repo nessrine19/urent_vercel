@@ -119,26 +119,22 @@ def api_product_add():
     
     return json.dumps({'status':500,'message':error})
 #add product images 
-'''@app.route('/product.images', methods=['POST'])
+@app.route('/product.images', methods=['POST'])
 def api_product_add_images():
     post_id= request.form.get('post_id')
-    image=request.files['image']
-    
+    profile_image=request.form.get['image']
     error =False        
     if (not error):
-        product_photo_path = os.path.join(app.config["UPLOADED_PHOTOS_DEST"], photos.save(image))
         response = supabase.table('post_image').insert({
             "post_id": post_id,
-            "image": product_photo_path,
+            "image": profile_image,
         }).execute()
         if len(response.data)>0:
-            return json.dumps({'status':200,'message':'','data':response.data})
-               
-    if not error:
-         error='Invalid info'        
+            return json.dumps({'status':200,'message':'','data':response.data})            
+    else:
+        error='Invalid info'        
     
     return json.dumps({'status':500,'message':error})
-'''
 #fetch categories 
 @app.route('/categories.all',methods=['GET'])
 def api_fetch_categories(): 
