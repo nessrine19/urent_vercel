@@ -122,7 +122,7 @@ def api_product_add():
 @app.route('/product.images', methods=['POST'])
 def api_product_add_images():
     post_id= request.form.get('post_id')
-    profile_image=request.form.get['image']
+    profile_image=request.form.get('image')
     error =False        
     if (not error):
         response = supabase.table('post_image').insert({
