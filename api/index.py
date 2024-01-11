@@ -93,7 +93,7 @@ def api_fetch_products():
     return json.dumps({'status':200,'message':'Post uploaded','data':response.data})
 
 #add product
-@app.route('/product.add', methods=['POST'])
+@app.route('/product.add', methods=['POST','GET'])
 def api_product_add():
     id_user= request.form.get('id_user')
     description= request.form.get('description')
