@@ -119,7 +119,7 @@ def api_product_add():
     
     return json.dumps({'status':500,'message':error})
 #add product images 
-@app.route('/product.images', methods=['POST'])
+@app.route('/product.images', methods=['POST','GET'])
 def api_product_add_images():
     post_id= request.form.get('post_id')
     profile_image=request.form.get('image')
