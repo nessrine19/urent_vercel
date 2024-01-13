@@ -135,6 +135,12 @@ def api_product_add_images():
         error='Invalid info'        
     
     return json.dumps({'status':500,'message':error})
+#fetch product's images 
+@app.route('/product.get.images',methods=['GET','POST'])
+def api_product_get_image(): 
+    post_id= request.form.get('post_id')
+    response = supabase.table('post_image').select("*").eq('post_id',post_id).execute()  
+    return json.dumps({'status':200,'message':'images  fetched ','data':response.data})
 #fetch categories 
 @app.route('/categories.all',methods=['GET'])
 def api_fetch_categories(): 
