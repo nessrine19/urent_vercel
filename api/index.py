@@ -1,6 +1,7 @@
 from flask import Flask, request
 import json
 import os
+from datetime import datetime
 from supabase import create_client, Client
 
 app = Flask(__name__)
@@ -38,7 +39,8 @@ def api_users_signup():
             "password": password,
             "fullname":fullname,
             "phonenum":phonenum,
-            'profile_pic':profile_pic,
+            "profile_pic":profile_pic,
+            "created_at":datetime.now().isoformat()
             }).execute()
         print(str(response.data))
         if len(response.data)==0:
@@ -113,7 +115,8 @@ def api_product_add():
                 "price": price,
                 "category_id": category,
                 "name": name,
-                "location": location
+                "location": location,
+                "created_at":datetime.now().isoformat()
             }).execute()
 
             if len(response.data) > 0:
@@ -132,6 +135,7 @@ def api_product_add_images():
         response = supabase.table('post_image').insert({
             "post_id": post_id,
             "image": profile_image,
+            "created_at":datetime.now().isoformat(),
         }).execute()
         if len(response.data)>0:
             return json.dumps({'status':200,'message':'','data':response.data})            
@@ -203,6 +207,7 @@ def api_user_request():
             "user_id": id_user,
             "post_id": id_post,
             "status": "pending",
+            "created_at":datetime.now().isoformat(),
         }).execute()
             return json.dumps({'status': 200, 'message': 'Request sent', 'data': response.data})
         except Exception as e:
