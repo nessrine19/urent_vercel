@@ -39,7 +39,7 @@ def api_users_signup():
             "password": password,
             "fullname":fullname,
             "phonenum":phonenum,
-            "profile_pic":profile_pic,
+            'profile_pic':profile_pic,
             "created_at":datetime.now().isoformat()
             }).execute()
         print(str(response.data))
@@ -84,7 +84,7 @@ def api_user_profile():
     id_user= request.form.get('id_user')
     response = supabase.table('USERS').select("*").eq('id',id_user).limit(1).execute()  
     return json.dumps({'status':200,'message':'profile data fetched ','data':response.data})
-
+#user info by id 
 #update profile 
 #display requests on user posts 
 #############################################Products functions ###############################################
@@ -95,36 +95,32 @@ def api_fetch_products():
     return json.dumps({'status':200,'message':'Post uploaded','data':response.data})
 
 #add product
-@app.route('/product.add', methods=['POST', 'GET'])
+@app.route('/product.add', methods=['POST','GET'])
 def api_product_add():
-    try:
-        id_user = request.form.get('id_user')
-        description = request.form.get('description')
-        price = request.form.get('price')
-        category = request.form.get('category')
-        name = request.form.get('name')
-        location = request.form.get('location')
-        error = False
-
-        # Rest of your code...
-
-        if not error:
-            response = supabase.table('POST').insert({
-                "user_id": id_user,
-                "Description": description,
-                "price": price,
-                "category_id": category,
-                "name": name,
-                "location": location,
-                "created_at":datetime.now().isoformat()
-            }).execute()
-
-            if len(response.data) > 0:
-                return json.dumps({'status': 200, 'message': '', 'data': response.data})
-
-    except Exception as e:
-        print(f"Exception: {e}")
-        return json.dumps({'status': 500, 'message': 'Internal Server Error'})
+    id_user= request.form.get('id_user')
+    description= request.form.get('description')
+    price=request.form.get('price')
+    category=request.form.get('category')
+    name=request.form.get('name')
+    location=request.form.get('location')
+    error =False        
+    if (not error):
+        response = supabase.table('POST').insert({
+            "user_id": id_user,
+            "Description": description,
+            "price": price,
+            "category_id": category,
+            "name": name,
+            "location": location,
+            "created_at":datetime.now().isoformat()
+        }).execute()
+        if len(response.data)>0:
+            return json.dumps({'status':200,'message':'','data':response.data})
+               
+    if not error:
+         error='Invalid info'        
+    
+    return json.dumps({'status':500,'message':error})
 #add product images 
 @app.route('/product.images', methods=['POST','GET'])
 def api_product_add_images():
@@ -135,7 +131,7 @@ def api_product_add_images():
         response = supabase.table('post_image').insert({
             "post_id": post_id,
             "image": profile_image,
-            "created_at":datetime.now().isoformat(),
+            "created_at":datetime.now().isoformat()
         }).execute()
         if len(response.data)>0:
             return json.dumps({'status':200,'message':'','data':response.data})            
@@ -207,7 +203,7 @@ def api_user_request():
             "user_id": id_user,
             "post_id": id_post,
             "status": "pending",
-            "created_at":datetime.now().isoformat(),
+            "created_at":datetime.now().isoformat()
         }).execute()
             return json.dumps({'status': 200, 'message': 'Request sent', 'data': response.data})
         except Exception as e:
