@@ -114,7 +114,7 @@ def api_product_add():
         if len(response.data)>0:
             return json.dumps({'status':200,'message':'','data':response.data})
                
-    if not error:
+    if  error:
          error='Invalid info'        
     
     return json.dumps({'status':500,'message':error})
