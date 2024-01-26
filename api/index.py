@@ -165,7 +165,25 @@ def api_product_like():
         except Exception as e:
             return json.dumps({'status': 500, 'message': 'Error sending the like', 'error': str(e)})
 
-    return json.dumps({'status': 500, 'message': error})  
+    return json.dumps({'status': 500, 'message': error}) 
+
+@app.route('/product.unlike', methods=['DELETE'])
+def delete_product_like():
+    id_user = request.form.get('id_user')
+    id_post = request.form.get('id_post')
+    error = False
+    if not id_user or not id_post:
+        error = 'User ID and post ID are required'
+
+    if not error:
+        try:
+            # Assuming 'likes' table has columns 'user_id' and 'post_id'
+            response = supabase.table('likes').delete().eq('user_id', id_user).eq('post_id', id_post).execute()
+            return json.dumps({'status': 200, 'message': 'like deleted', 'data': response.data})
+        except Exception as e:
+            return json.dumps({'status': 500, 'message': 'Error deleting the like', 'error': str(e)})
+
+    return json.dumps({'status': 500, 'message': error})
 #fetch categories 
 @app.route('/categories.all',methods=['GET'])
 def api_fetch_categories(): 
