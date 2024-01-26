@@ -145,6 +145,27 @@ def api_product_get_image():
     post_id= request.form.get('post_id')
     response = supabase.table('post_image').select("*").eq('post_id',post_id).execute()  
     return json.dumps({'status':200,'message':'images  fetched ','data':response.data})
+#post likes
+@app.route('/product.like',methods=['GET','POST'])
+def api_product_like(): 
+    id_user = request.form.get('id_user')
+    id_post= request.form.get('id_post')
+    error = False
+    if not id_user  and not id_post :
+        error = 'User ID and post ID  are required'
+
+    if not error:
+        try:
+            response = supabase.table('likes').insert({
+            "user_id": id_user,
+            "post_id": id_post,
+            "created_at":datetime.now().isoformat()
+        }).execute()
+            return json.dumps({'status': 200, 'message': 'like sent', 'data': response.data})
+        except Exception as e:
+            return json.dumps({'status': 500, 'message': 'Error sending the like', 'error': str(e)})
+
+    return json.dumps({'status': 500, 'message': error})  
 #fetch categories 
 @app.route('/categories.all',methods=['GET'])
 def api_fetch_categories(): 
