@@ -114,9 +114,9 @@ def api_product_add():
         if len(response.data)>0:
             return json.dumps({'status':200,'message':'','data':response.data})
                
-    if  error:
+    '''if  error:
         error='Invalid info'       
-        return json.dumps({'status':500,'message':error})
+        return json.dumps({'status':500,'message':error})'''
 #add product images 
 @app.route('/product.images', methods=['POST','GET'])
 def api_product_add_images():
