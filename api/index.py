@@ -201,24 +201,34 @@ def api_uset_favorite():
 
     return json.dumps({'status': 500, 'message': error})
 #fetch top liked posts 
-@app.route('/product.likes.count', methods=['GET'])
+@app.route('/product.likes.count',methods=['GET','POST'])
 def api_fetch_likes_count():
     try:
-
+        # Fetch likes data from the 'likes' table
         likes_response = supabase.table('likes').select("*").execute()
 
+        # Check if the response is successful
         if len(likes_response.data)>0:
             likes_data = likes_response.data
+
+            # Create a dictionary to store post_id and corresponding like count
             like_count_dict = {}
 
+            # Iterate through likes data and count likes for each post_id
             for like in likes_data:
                 post_id = like.get('post_id')
+                
+                # Check if post_id is present in the dictionary, if not, initialize it
                 if post_id not in like_count_dict:
                     like_count_dict[post_id] = 1
                 else:
                     like_count_dict[post_id] += 1
 
+            # Convert the dictionary to a list of dictionaries for response formatting
             result_list = [{'post_id': post_id, 'count': count} for post_id, count in like_count_dict.items()]
+
+            # Sort the result list in descending order based on the like count
+            result_list.sort(key=lambda x: x['count'], reverse=True)
 
             return json.dumps({'status': 200, 'message': 'Likes count fetched', 'data': result_list})
         else:
@@ -226,6 +236,7 @@ def api_fetch_likes_count():
 
     except Exception as e:
         return json.dumps({'status': 500, 'message': f'Error: {str(e)}'})
+
 #fetch categories 
 @app.route('/categories.all',methods=['GET'])
 def api_fetch_categories(): 
