@@ -323,7 +323,6 @@ def api_requests_count():
 @app.route('/api', methods=["GET"])
 def hello():
     return "It works!"
-
 @app.route('/searchbycategory', methods=["POST"])
 def search():
     query = request.args.get('query', '').strip()
@@ -416,14 +415,16 @@ def getCategory():
 @app.route('/getdesc', methods=['POST'])
 def getDesc():
     query = request.args.get('query', '').strip()
-    desc = supabase.from_('POST').select('Description').ilike('Description',f'%{query}%').execute()
+    price = request.args.get('price', '').strip()
+    desc = supabase.from_('POST').select('Description').lte('price',price).ilike('Description',f'%{query}%').execute()
     descritpions = desc.data if desc else ""
     return descritpions
 
 @app.route('/getloc', methods=['POST'])
 def getLoc():
     query = request.args.get('query', '').strip()
-    desc = supabase.from_('POST').select('location').ilike('location',f'%{query}%').execute()
+    price = request.args.get('price', '').strip()
+    desc = supabase.from_('POST').select('location').lte('price',price).ilike('location',f'%{query}%').execute()
     descritpions = desc.data if desc else ""
     return descritpions
 
