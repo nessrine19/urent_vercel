@@ -199,7 +199,6 @@ def api_uset_favorite():
         except Exception as e:
             return json.dumps({'status': 500, 'message': 'Error sending the like', 'error': str(e)})
 
-    return json.dumps({'status': 500, 'message': error})
 #fetch top liked posts 
 @app.route('/product.likes.count',methods=['GET','POST'])
 def api_fetch_likes_count():
