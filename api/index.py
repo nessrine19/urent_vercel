@@ -236,6 +236,13 @@ def api_fetch_likes_count():
 
     except Exception as e:
         return json.dumps({'status': 500, 'message': f'Error: {str(e)}'})
+#info per post 
+@app.route('/getpost.info', methods=['POST','GET'])
+def api_get_info_per_post(): 
+    id_post = request.form.get('id_post')
+    response = supabase.table('POST').select("*").eq('id', id_post).execute()  
+    return json.dumps({'status':200,'message':'Post uploaded','data':response.data})
+
 
 #fetch categories 
 @app.route('/categories.all',methods=['GET'])
