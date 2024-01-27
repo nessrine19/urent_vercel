@@ -195,7 +195,7 @@ def api_uset_favorite():
     if not error:
         try:
             response = supabase.table('likes').select("*").eq('user_id', id_user).execute()  
-            return json.dumps({'status':200,'message':'Post fetched','data':response.data})
+            return json.dumps({'status':200,'message':'favorite Post fetched','data':response.data})
         except Exception as e:
             return json.dumps({'status': 500, 'message': 'Error sending the like', 'error': str(e)})
 
