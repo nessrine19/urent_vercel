@@ -320,6 +320,121 @@ def api_requests_count():
     except Exception as e:
         return json.dumps({'status': 500, 'message': 'Error fetching requests count', 'error': str(e)})
 
+#sarah
+@app.route('/api', methods=["GET"])
+def hello():
+    return "It works!"
+
+@app.route('/searchbycategory', methods=["POST"])
+def search():
+    query = request.args.get('query', '').strip()
+
+    if not query:
+        return jsonify({'error': 'Missing query parameter'}), 400
+
+    response_category = supabase.from_('categories').select('id').ilike('Category', f'%{query}%').execute()
+    category = response_category.data if response_category else ""
+   
+    cats =[]
+    for cat in category: 
+        post_cat = supabase.from_('POST').select('id').eq('category_id', cat).execute()
+        post_categories = post_cat.data if post_cat else ""
+        cats.append(post_categories)
+
+    response_data = {        
+        'category': cats,
+    }
+
+    return jsonify(response_data)
+
+@app.route('/searchbylocation', methods=["POST"])
+def searchbylocation():
+    query = request.args.get('query', '').strip()
+
+    if not query:
+        return jsonify({'error': 'Missing query parameter'}), 400
+    
+    response_location = supabase.from_('POST').select('id').ilike('location', f'%{query}%').execute()
+    location = response_location.data if response_location else ""
+
+    reponse_data = {
+        'location': location,
+        }
+    return reponse_data
+
+
+@app.route('/searchbyusers', methods=["POST"])
+def searchbyusers():
+    query = request.args.get('query', '').strip()
+
+    if not query:
+        return jsonify({'error': 'Missing query parameter'}), 400
+    
+    response_user = supabase.from_('USERS').select('*').ilike('fullname', f'%{query}%').execute()
+    users = response_user.data if response_user else ""
+   
+    return users
+
+
+
+@app.route('/searchbydescription', methods=["GET"])
+def searchbydescription():
+    query = request.args.get('query', '').strip()
+
+    if not query:
+        return jsonify({'error': 'Missing query parameter'}), 400
+    
+    response_description = supabase.from_('POST').select('id').ilike('Description', f'%{query}%').execute()
+    description = response_description.data if response_description else ""
+    
+    return description
+
+
+@app.route('/searchlocation', methods=["GET"])
+def searchlocation(): 
+     query = request.args.get('query', '').strip()
+     location = requests.get('https://photon.komoot.io/api?q={query}')
+     loc = location.content if location else ""
+     return loc
+     
+
+
+@app.route('/getpost', methods=['POST'])
+def getPost():
+    query = request.args.get('query', '').strip()
+    post = supabase.from_('POST').select('*').eq('id', query).execute()
+    post_info = post.data if post else ""
+    return post_info
+
+
+@app.route('/getcategories', methods=['GET'])
+def getCategory():
+    categories = supabase.from_('categories').select('Category').execute()
+    categories = categories.data if categories else ""
+    return categories
+
+
+@app.route('/getdesc', methods=['POST'])
+def getDesc():
+    query = request.args.get('query', '').strip()
+    desc = supabase.from_('POST').select('Description').ilike('Description',f'%{query}%').execute()
+    descritpions = desc.data if desc else ""
+    return descritpions
+
+@app.route('/getloc', methods=['POST'])
+def getLoc():
+    query = request.args.get('query', '').strip()
+    desc = supabase.from_('POST').select('location').ilike('location',f'%{query}%').execute()
+    descritpions = desc.data if desc else ""
+    return descritpions
+
+
+@app.route('/getcategory', methods=['POST'])
+def getcategory():
+    query = request.args.get('query', '').strip()
+    desc = supabase.from_('categories').select('Category').ilike('Category',f'%{query}%').execute()
+    descritpions = desc.data if desc else ""
+    return descritpions
 @app.route('/')
 def about():
     return 'Welcome ENSIA Students'
