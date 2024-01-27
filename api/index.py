@@ -184,6 +184,22 @@ def delete_product_like():
             return json.dumps({'status': 500, 'message': 'Error deleting the like', 'error': str(e)})
 
     return json.dumps({'status': 500, 'message': error})
+#fetch liked per user 
+@app.route('/user.favorite',methods=['GET','POST'])
+def api_uset_favorite(): 
+    id_user = request.form.get('id_user')
+    error = False
+    if not id_user :
+        error = 'User ID is required'
+
+    if not error:
+        try:
+            response = supabase.table('likes').select("*").eq('user_id', id_user).execute()  
+            return json.dumps({'status':200,'message':'Post fetched','data':response.data})
+        except Exception as e:
+            return json.dumps({'status': 500, 'message': 'Error sending the like', 'error': str(e)})
+
+    return json.dumps({'status': 500, 'message': error})
 #fetch categories 
 @app.route('/categories.all',methods=['GET'])
 def api_fetch_categories(): 
