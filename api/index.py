@@ -348,11 +348,11 @@ def search():
 @app.route('/searchbylocation', methods=["POST"])
 def searchbylocation():
     query = request.args.get('query', '').strip()
-
+    price = request.args.get('price', '').strip()
     if not query:
         return jsonify({'error': 'Missing query parameter'}), 400
     
-    response_location = supabase.from_('POST').select('id').ilike('location', f'%{query}%').execute()
+    response_location = supabase.from_('POST').select('id').ilike('location', f'%{query}%').lte('price', price).execute()
     location = response_location.data if response_location else ""
 
     reponse_data = {
@@ -378,14 +378,23 @@ def searchbyusers():
 @app.route('/searchbydescription', methods=["GET"])
 def searchbydescription():
     query = request.args.get('query', '').strip()
-
     if not query:
         return jsonify({'error': 'Missing query parameter'}), 400
-    
-    response_description = supabase.from_('POST').select('id').ilike('Description', f'%{query}%').execute()
-    description = response_description.data if response_description else ""
-    
-    return description
+
+    response_category = supabase.from_('categories').select('id').ilike('Category', f'%{query}%').execute()
+    category = response_category.data if response_category else ""
+   
+    cats =[]
+    for cat in category: 
+        post_cat = supabase.from_('POST').select('id').eq('category_id', cat).execute()
+        post_categories = post_cat.data if post_cat else ""
+        cats.append(post_categories)
+
+    response_data = {        
+        'category': cats,
+    }
+
+    return jsonify(response_data)
 
 
 @app.route('/searchlocation', methods=["GET"])
