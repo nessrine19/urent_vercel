@@ -309,15 +309,14 @@ def api_user_request():
 
     return json.dumps({'status': 500, 'message': error})
 
-@app.route('/product.requests_count', methods=['GET', 'POST'])
+@app.route('/product.requests.per.user', methods=['GET', 'POST'])
 def api_requests_count():
     try:
-        response = supabase.table('Bookings').select('*').execute()
-        for i in response.data:
-            print(i['post_id'])
-        return json.dumps({'status': 200, 'message': 'Requests count fetched', 'data': response.data})
+        id_user = request.form.get('id_user')
+        response = supabase.table('Bookings').select('*').eq('user_id', id_user).execute()
+        return json.dumps({'status': 200, 'message': 'Requests per user fetched', 'data': response.data})
     except Exception as e:
-        return json.dumps({'status': 500, 'message': 'Error fetching requests count', 'error': str(e)})
+        return json.dumps({'status': 500, 'message': 'Error fetching requests ', 'error': str(e)})
 
 #sarah
 @app.route('/api', methods=["GET"])
