@@ -374,7 +374,7 @@ def searchbyusers():
 
 
 
-@app.route('/searchbydescription', methods=["GET"])
+@app.route('/searchbydescription', methods=["POST"])
 def searchbydescription():
     query = request.args.get('query', '').strip()
     if not query:
