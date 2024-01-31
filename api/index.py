@@ -454,13 +454,17 @@ def update():
 def BookingIds(): 
     query= request.args.get('query', '').strip()
     
-    response = supabase.from_('Bookings').select('post_id').eq('user_id',query).execute()
+    response = supabase.from_('Bookings').select('post_id','status').eq('user_id',query).neq('status','completed').execute()
     reponsedecoding = response.data if response else ""
-    ids=[]
-    for id in reponsedecoding: 
-        ids.append(id['post_id'])
-    ids = list(set(ids))
-    return ids
+    return reponsedecoding
+
+
+@app.route('/GetHistoryBookings',methods=['POST'])
+def history(): 
+    query= request.args.get('query', '').strip()
+    response = supabase.from_('Bookings').select('post_id','status').eq('user_id',query).neq('status','pending').execute()
+    reponsedecoding = response.data if response else ""
+    return reponsedecoding
 
 @app.route('/')
 def about():
