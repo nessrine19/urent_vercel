@@ -443,6 +443,30 @@ def getcategory():
     desc = supabase.from_('categories').select('Category').ilike('Category',f'%{query}%').execute()
     descritpions = desc.data if desc else ""
     return descritpions
+
+###############################user bio #####################################
+@app.route('/getUserBio', methods=['POST'])
+def GetBio(): 
+    query = request.args.get('id', '').strip()
+    bio = supabase.from_('USERS').select('Bio').eq('id',query).execute()
+    bio = bio.data if bio else ""
+    return bio[0]['Bio']
+###########################Update user profile #############################
+
+@app.route('/UpdateUserInfo', methods=['POST'])
+def update(): 
+    id= request.args.get('id', '').strip()
+    bio = request.args.get('bio', '').strip()
+    fullname = request.args.get('fullname', '').strip()
+
+    resposne = supabase.table('USERS').update({'fullname':fullname, 'Bio':bio}).eq('id', id).execute()
+    if(resposne): 
+        dt = jsonify({'message': 200})
+        return dt
+    else: 
+        dt = jsonify({"message":404})
+        return dt
+
 @app.route('/')
 def about():
     return 'Welcome ENSIA Students'
