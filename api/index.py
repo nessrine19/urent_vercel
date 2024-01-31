@@ -377,32 +377,14 @@ def searchbyusers():
 @app.route('/searchbydescription', methods=["POST"])
 def searchbydescription():
     query = request.args.get('query', '').strip()
+    price = request.args.get('price', '').strip()
     if not query:
         return jsonify({'error': 'Missing query parameter'}), 400
-
-    response_category = supabase.from_('categories').select('id').ilike('Category', f'%{query}%').execute()
-    category = response_category.data if response_category else ""
-   
-    cats =[]
-    for cat in category: 
-        post_cat = supabase.from_('POST').select('id').eq('category_id', cat).execute()
-        post_categories = post_cat.data if post_cat else ""
-        cats.append(post_categories)
-
-    response_data = {        
-        'category': cats,
-    }
-
-    return jsonify(response_data)
-
-
-@app.route('/searchlocation', methods=["GET"])
-def searchlocation(): 
-     query = request.args.get('query', '').strip()
-     location = requests.get('https://photon.komoot.io/api?q={query}')
-     loc = location.content if location else ""
-     return loc
-     
+    
+    response_description = supabase.from_('POST').select('id').ilike('Description', f'%{query}%').lte('price', price).execute()
+    description = response_description.data if response_description else ""
+    
+    return description
 
 
 @app.route('/getpost', methods=['POST'])
