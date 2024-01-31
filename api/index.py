@@ -449,6 +449,19 @@ def update():
         dt = jsonify({"message":404})
         return dt
 
+
+@app.route('/GetPostBookingsIds', methods=['POST'])
+def BookingIds(): 
+    query= request.args.get('query', '').strip()
+    
+    response = supabase.from_('Bookings').select('post_id').eq('user_id',query).execute()
+    reponsedecoding = response.data if response else ""
+    ids=[]
+    for id in reponsedecoding: 
+        ids.append(id['post_id'])
+    ids = list(set(ids))
+    return ids
+
 @app.route('/')
 def about():
     return 'Welcome ENSIA Students'
