@@ -423,7 +423,10 @@ def getDesc():
     price = request.args.get('price', '').strip()
     desc = supabase.from_('POST').select('Description').lte('price',price).ilike('Description',f'%{query}%').execute()
     descritpions = desc.data if desc else ""
-    return descritpions
+    list =[]
+    for item in descritpions: 
+        list.append(item['Description']) 
+    return list
 
 @app.route('/getloc', methods=['POST'])
 def getLoc():
