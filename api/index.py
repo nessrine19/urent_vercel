@@ -340,7 +340,7 @@ def hello():
 @app.route('/searchbycategory', methods=["POST"])
 def search():
     query = request.args.get('query', '').strip()
-
+    price = request.args.get('price', '').strip()
     if not query:
         return jsonify({'error': 'Missing query parameter'}), 400
 
@@ -349,15 +349,10 @@ def search():
    
     cats =[]
     for cat in category: 
-        post_cat = supabase.from_('POST').select('id').eq('category_id', cat).execute()
+        post_cat = supabase.from_('POST').select('id').eq('category_id', cat['id']).lte('price',price).execute()
         post_categories = post_cat.data if post_cat else ""
         cats.append(post_categories)
-
-    response_data = {        
-        'category': cats,
-    }
-
-    return jsonify(response_data)
+    return cats
 
 @app.route('/searchbylocation', methods=["POST"])
 def searchbylocation():
@@ -369,9 +364,9 @@ def searchbylocation():
     response_location = supabase.from_('POST').select('id').ilike('location', f'%{query}%').lte('price', price).execute()
     location = response_location.data if response_location else ""
 
-    reponse_data = {
-        'location': location,
-        }
+    reponse_data = []
+    for i in location: 
+        reponse_data.append(i['id'])
     return reponse_data
 
 
