@@ -436,7 +436,7 @@ def getLoc():
     descritpions = desc.data if desc else ""
     list =[]
     for item in descritpions: 
-        list.append(item['Description'])
+        list.append(item['location'])
     return list
 
 
@@ -447,7 +447,7 @@ def getcategory():
     descritpions = desc.data if desc else ""
     list =[]
     for item in descritpions: 
-        list.append(item['Description'])
+        list.append(item['Category'])
     return list
 
 ###############################user bio #####################################
