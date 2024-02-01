@@ -351,7 +351,8 @@ def search():
     for cat in category: 
         post_cat = supabase.from_('POST').select('id').eq('category_id', cat['id']).lte('price',price).execute()
         post_categories = post_cat.data if post_cat else ""
-        cats.append(post_categories)
+        for i in post_categories: 
+            cats.append(i['id'])
     return cats
 
 @app.route('/searchbylocation', methods=["POST"])
@@ -394,7 +395,10 @@ def searchbydescription():
     response_description = supabase.from_('POST').select('id').ilike('Description', f'%{query}%').lte('price', price).execute()
     description = response_description.data if response_description else ""
     
-    return description
+    reponse_data = []
+    for i in description: 
+        reponse_data.append(i['id'])
+    return reponse_data
 
 
 @app.route('/getpost', methods=['POST'])
