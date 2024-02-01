@@ -425,7 +425,7 @@ def getDesc():
     descritpions = desc.data if desc else ""
     list =[]
     for item in descritpions: 
-        list.append(item['Description']) 
+        list.append(item['Description'])
     return list
 
 @app.route('/getloc', methods=['POST'])
@@ -434,7 +434,10 @@ def getLoc():
     price = request.args.get('price', '').strip()
     desc = supabase.from_('POST').select('location').lte('price',price).ilike('location',f'%{query}%').execute()
     descritpions = desc.data if desc else ""
-    return descritpions
+    list =[]
+    for item in descritpions: 
+        list.append(item['Description'])
+    return list
 
 
 @app.route('/getcategory', methods=['POST'])
@@ -442,7 +445,10 @@ def getcategory():
     query = request.args.get('query', '').strip()
     desc = supabase.from_('categories').select('Category').ilike('Category',f'%{query}%').execute()
     descritpions = desc.data if desc else ""
-    return descritpions
+    list =[]
+    for item in descritpions: 
+        list.append(item['Description'])
+    return list
 
 ###############################user bio #####################################
 @app.route('/getUserBio', methods=['POST'])
