@@ -472,13 +472,15 @@ def update():
         return dt
 
 
-@app.route('/GetPrndingBookings', methods=['POST'])
+@app.route('/GetPendingBookings', methods=['POST'])
 def BookingIds(): 
     query= request.args.get('query', '').strip()
-    
-    response = supabase.from_('Bookings').select('post_id','status').eq('user_id',query).neq('status','completed').execute()
+    response = supabase.from_('Bookings').select('post_id').eq('user_id',query).neq('status','pending').execute()
     reponsedecoding = response.data if response else ""
-    return reponsedecoding
+    list=[]
+    for i in reponsedecoding: 
+        list.append(i['post_id'])
+    return list
 
 
 @app.route('/GetHistoryBookings',methods=['POST'])
