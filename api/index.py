@@ -475,7 +475,7 @@ def update():
 @app.route('/GetPendingBookings', methods=['POST'])
 def BookingIds(): 
     query= request.args.get('query', '').strip()
-    response = supabase.from_('Bookings').select('post_id').eq('user_id',query).neq('status','pending').execute()
+    response = supabase.from_('Bookings').select('post_id').eq('user_id',query).eq('status','pending').execute()
     reponsedecoding = response.data if response else ""
     list=[]
     for i in reponsedecoding: 
