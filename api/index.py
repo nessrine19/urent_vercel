@@ -186,30 +186,25 @@ def delete_product_like():
     return json.dumps({'status': 500, 'message': error})
 #fetch liked per user 
 @app.route('/user.favorite',methods=['GET','POST'])
-def api_uset_favorite(): 
-    id_user = request.form.get('id_user')
-    error = False
-    if not id_user:
-        error = 'User ID is required'
+def api_user_favorite():
+    try:
+        id_user = request.form.get('id_user')
 
-    if not error:
-        try:
-            query = f"""
-                SELECT POST.*, likes.user_id AS is_liked
-                FROM POST
-                LEFT JOIN likes ON POST.id = likes.post_id AND likes.user_id = '{id_user}';
-            """
-            response = supabase.table('POST').select("*", f"likes:user_id=eq.{id_user}")
-            if response['error']:
-                return json.dumps({"status": 500, "message": "Error fetching favorite posts", "error": response['error']['message']})
+        if not id_user:
+            return json.dumps({"status": 400, "message": "User ID is required"})
+        response = supabase.from('POST') \
+            .select('POST.*, likes.user_id AS is_liked') \
+            .leftJoin('likes', 'POST.id', 'likes.post_id') \
+            .eq('likes.user_id', id_user) \
+            .execute()
 
-            favorite_posts = response['data']
+        if response['error']:
+            return json.dumps({"status": 500, "message": "Error fetching favorite posts", "error": response['error']['message']})
 
-            return json.dumps({"status": 200, "message": "Favorite posts fetched", "data": favorite_posts})
+        return json.dumps({"status": 200, "message": "Favorite posts fetched", "data": response})
 
-        except Exception as e:
-            return json.dumps({"status": 500, "message": "Error fetching favorite posts", "error": str(e)})
-
+    except Exception as e:
+        return json.dumps({"status": 500, "message": "Error fetching favorite posts", "error": str(e)})
 
 #fetch top liked posts 
 @app.route('/product.likes.count',methods=['GET','POST'])
