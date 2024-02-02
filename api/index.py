@@ -434,7 +434,14 @@ def getLoc():
 @app.route('/getcategory', methods=['POST'])
 def getcategory():
     query = request.args.get('query', '').strip()
-    desc = supabase.from_('categories').select('Category').ilike('Category',f'%{query}%').execute()
+    price = request.args.get('price', '').strip()
+    categoryIDs = supabase.from_('POST').select('category_id').lte('price',price).execute()
+    descritpions = categoryIDs.data if categoryIDs else ""
+    ids = []
+    for i in descritpions: 
+        ids.append(i['category_id'])
+
+    desc = supabase.from_('categories').select('Category').ilike('Category',f'%{query}%').in_('id',ids).execute()
     descritpions = desc.data if desc else ""
     list =[]
     for item in descritpions: 
