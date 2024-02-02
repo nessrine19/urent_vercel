@@ -200,7 +200,8 @@ def api_user_favorite():
 
     except Exception as e:
         return json.dumps({"status": 500, "message": "Error fetching favorite posts", "error": str(e)})
-#fetch top liked posts 
+#fetch top liked posts
+@app.route('/product.likes.count',methods=['GET','POST'])
 def api_fetch_likes_count():
     try:
         # Fetch likes data from the 'likes' table
