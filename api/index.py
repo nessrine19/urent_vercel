@@ -201,7 +201,6 @@ def api_user_favorite():
     except Exception as e:
         return json.dumps({"status": 500, "message": "Error fetching favorite posts", "error": str(e)})
 #fetch top liked posts 
-@app.route('/product.likes.count',methods=['GET','POST'])
 def api_fetch_likes_count():
     try:
         # Fetch likes data from the 'likes' table
@@ -229,8 +228,9 @@ def api_fetch_likes_count():
 
             # Sort the result list in descending order based on the like count
             result_list.sort(key=lambda x: x['count'], reverse=True)
-
-            return json.dumps({'status': 200, 'message': 'Likes count fetched', 'data': result_list})
+            post_ids = [like['post_id'] for like in result_list]
+            posts_response = supabase.table('POST').select('*').in_('id', post_ids).execute()
+            return json.dumps({'status': 200, 'message': 'top liked count fetched', 'data': posts_response.data})
         else:
             return json.dumps({'status': 400, 'message': 'Error fetching likes count'})
 
