@@ -185,27 +185,21 @@ def delete_product_like():
 
     return json.dumps({'status': 500, 'message': error})
 #fetch liked per user 
-'''@app.route('/user.favorite',methods=['GET','POST'])
+@app.route('/user.favorite',methods=['GET','POST'])
 def api_user_favorite():
     try:
         id_user = request.form.get('id_user')
 
         if not id_user:
             return json.dumps({"status": 400, "message": "User ID is required"})
-        response = supabase.from('POST') \
-            .select('POST.*, likes.user_id AS is_liked') \
-            .leftJoin('likes', 'POST.id', 'likes.post_id') \
-            .eq('likes.user_id', id_user) \
-            .execute()
 
-        if response['error']:
-            return json.dumps({"status": 500, "message": "Error fetching favorite posts", "error": response['error']['message']})
-
-        return json.dumps({"status": 200, "message": "Favorite posts fetched", "data": response})
+        likes_response = supabase.table('likes').select("*").eq('user_id',id_user).execute()
+        post_ids = [like['post_id'] for like in likes_response.data]
+        posts_response = supabase.table('POST').select('*').in_('id', post_ids).execute()
+        return json.dumps({'status': 200, 'message': 'like sent', 'data': posts_response.data})
 
     except Exception as e:
         return json.dumps({"status": 500, "message": "Error fetching favorite posts", "error": str(e)})
-'''
 #fetch top liked posts 
 @app.route('/product.likes.count',methods=['GET','POST'])
 def api_fetch_likes_count():
