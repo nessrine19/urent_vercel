@@ -189,23 +189,20 @@ def delete_product_like():
 def api_uset_favorite(): 
     id_user = request.form.get('id_user')
     error = False
+    if not id_user:
+        error = 'User ID is required'
+
     if not error:
         try:
-            # Use a LEFT JOIN to get all posts and whether they are liked by the specified user
             query = f"""
                 SELECT POST.*, likes.user_id AS is_liked
                 FROM POST
                 LEFT JOIN likes ON POST.id = likes.post_id AND likes.user_id = '{id_user}';
             """
-
-            # Execute the query
-            response = supabase.query(query)
-
-            # Check for errors in the response
+            response = supabase.table('POST').select("*", f"likes:user_id=eq.{id_user}")
             if response['error']:
                 return json.dumps({"status": 500, "message": "Error fetching favorite posts", "error": response['error']['message']})
 
-            # Get the result data
             favorite_posts = response['data']
 
             return json.dumps({"status": 200, "message": "Favorite posts fetched", "data": favorite_posts})
