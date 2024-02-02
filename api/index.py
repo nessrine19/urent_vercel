@@ -472,7 +472,7 @@ def update():
         return dt
 
 
-@app.route('/GetPostBookingsIds', methods=['POST'])
+@app.route('/GetPrndingBookings', methods=['POST'])
 def BookingIds(): 
     query= request.args.get('query', '').strip()
     
