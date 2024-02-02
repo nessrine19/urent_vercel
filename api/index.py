@@ -185,7 +185,7 @@ def delete_product_like():
 
     return json.dumps({'status': 500, 'message': error})
 #fetch liked per user 
-@app.route('/user.favorite',methods=['GET','POST'])
+'''@app.route('/user.favorite',methods=['GET','POST'])
 def api_user_favorite():
     try:
         id_user = request.form.get('id_user')
@@ -205,7 +205,7 @@ def api_user_favorite():
 
     except Exception as e:
         return json.dumps({"status": 500, "message": "Error fetching favorite posts", "error": str(e)})
-
+'''
 #fetch top liked posts 
 @app.route('/product.likes.count',methods=['GET','POST'])
 def api_fetch_likes_count():
