@@ -485,6 +485,17 @@ def history():
     reponsedecoding = response.data if response else ""
     return reponsedecoding
 
+@app.route('/getPostImages', methods=['POST'])
+def images(): 
+    query= request.args.get('query', '').strip()
+    response = supabase.from_('post_image').select('image').eq('post_id',query).execute()
+    images = response.data if response else ""
+    list=[]
+    for i in images: 
+        list.append(i['image'])
+    return list
+
+
 @app.route('/')
 def about():
     return 'Welcome ENSIA Students'
