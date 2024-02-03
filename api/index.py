@@ -479,7 +479,7 @@ def update():
         if(resposne): 
            dt = jsonify({'message': 200})
            return dt
-    except requests.exceptions.RequestException as e:
+    except Exception as e:
         error_message = f"HTTP request error: {str(e)}"
         return jsonify({"error": error_message}), 500 
 
