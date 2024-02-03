@@ -474,14 +474,14 @@ def update():
     id= request.args.get('id', '').strip()
     bio = request.args.get('bio', '').strip()
     fullname = request.args.get('fullname', '').strip()
-
-    resposne = supabase.table('USERS').update({'fullname':fullname, 'Bio':bio}).eq('id', id).execute()
-    if(resposne): 
-        dt = jsonify({'message': 200})
-        return dt
-    else: 
-        dt = jsonify({"message":404})
-        return dt
+    try: 
+        resposne = supabase.table('USERS').update({'fullname':fullname, 'Bio':bio}).eq('id', id).execute()
+        if(resposne): 
+           dt = jsonify({'message': 200})
+           return dt
+    except requests.exceptions.RequestException as e:
+        error_message = f"HTTP request error: {str(e)}"
+        return jsonify({"error": error_message}), 500 
 
 
 @app.route('/GetPendingBookings', methods=['POST'])
