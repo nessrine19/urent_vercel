@@ -237,6 +237,23 @@ def api_fetch_likes_count():
 
     except Exception as e:
         return json.dumps({'status': 500, 'message': f'Error: {str(e)}'})
+#count user rents
+@app.route('/product.user.count',methods=['GET','POST'])
+def api_user_count(): 
+    id_user = request.form.get('id_user')
+    error = False
+    if not id_user:
+        error = 'User ID is required'
+
+    if not error:
+        try:
+            response = supabase.table('POST').select("*").eq('user_id', id_user).execute()
+            count=len(response.data)
+            return json.dumps({'status': 200, 'message': 'User posts fetched', 'count of renter posts':count})
+        except Exception as e:
+            return json.dumps({'status': 500, 'message': 'Error fetching user posts', 'error': str(e)})
+    return json.dumps({'status': 500, 'message': error})
+
 #info per post 
 @app.route('/getpost.info', methods=['POST','GET'])
 def api_get_info_per_post(): 
