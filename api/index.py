@@ -285,9 +285,9 @@ def api_fetch_products_by_category():
         return json.dumps({'status': 500, 'message': 'Error fetching products by category', 'error': str(e)})
 
 ######################################Product and user ###################################
-#display user posts 
+#display user posts and count the bookings on each 
 @app.route('/product.user',methods=['GET','POST'])
-def api_user_products(): 
+def api_user_products():
     id_user = request.form.get('id_user')
     error = False
 
@@ -296,8 +296,21 @@ def api_user_products():
 
     if not error:
         try:
-            response = supabase.table('POST').select("*").eq('user_id', id_user).execute()
-            return json.dumps({'status': 200, 'message': 'User posts fetched', 'data': response.data})
+
+            response_posts = supabase.table('POST').select("*").eq('user_id', id_user).execute()
+            posts_data = response_posts.data
+
+            post_ids = [post['id'] for post in posts_data]
+
+            bookings_counts = {}
+            for post_id in post_ids:
+                response_bookings = supabase.table('Bookings').select('*').eq('post_id', post_id).execute()
+                bookings_count = len(response_bookings.data)
+                bookings_counts[str(post_id)] = bookings_count  
+            for post in posts_data:
+                post['bookings_count'] = bookings_counts.get(str(post['id']), 0)
+
+            return json.dumps({'status': 200, 'message': 'User posts fetched', 'data': {'posts': posts_data}})
         except Exception as e:
             return json.dumps({'status': 500, 'message': 'Error fetching user posts', 'error': str(e)})
 
