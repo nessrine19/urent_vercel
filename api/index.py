@@ -81,7 +81,7 @@ def api_users_signup_auth():
 #show user info in the profile 
 @app.route('/user.profile',methods=['GET','POST'])
 def api_user_profile(): 
-    id_user= request.args.get('id_user', '').strip()
+    id_user= request.form.get('id_user')
     response = supabase.table('USERS').select("*").eq('id',id_user).limit(1).execute()  
     return json.dumps({'status':200,'message':'profile data fetched ','data':response.data})
 #user info by id 
